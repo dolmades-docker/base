@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# scan just c:
+# else we will scan bind mounts if any are configured
+# and we consider this a security leak
+scandir='/wineprefix/dosdevices/c:/'
+dolmadeName="$(cat /wineprefix/dolmadename | tr -cd '[:print:]')"
+separator='|'
+dolmadeIcon="/wineprefix/icon.png"
+lnkTargets=$(find $scandir -name '*.lnk' -exec winepath -w  {} \; | sed 's/\\/\\\\/g' | tr -s '\n' "$separator")
+selection=$(yad --title="$dolmadeName" --image="$dolmadeIcon" --button=gtk-execute:0 --button=gtk-cancel:1 --form --separator="$separator" --item-separator="$separator" --field="Select Target":CB "${lnkTargets%$separator}")
+if [ "$?" == 0 ]; then
+	echo "Running $selection..."
+
+	# create a FIFO file, used to manage the I/O redirection from shell
+	PIPE=$(mktemp -u --tmpdir ${0##*/}.XXXXXXXX)
+	mkfifo $PIPE
+
+	# attach a file descriptor to the file
+	exec 3<> $PIPE
+
+	# add handler to manage process shutdown
+	function on_exit() {
+	    echo "quit" >&3
+	    rm -f $PIPE
+	}
+	trap on_exit EXIT
+
+	# add handler for tray icon left click
+	function on_click() {
+		for ((i=1; i<=100; i++))
+        	{
+			echo $i
+			echo "# Remaining $((50-i))% to finish the job"
+			sleep 0.05
+		} | 
+		yad --progress --center --text="$1 is running ..." --button=gtk-ok --auto-close --kill-parent --image="$2"
+	}
+	export -f on_click
+
+	# install a notification icon for the duration of the run
+	yad --notification --image=/dolmades.png --listen \
+            --no-middle \
+            --command="bash -c 'on_click \"$dolmadeName\" \"$dolmadeIcon\"'" --text="$dolmadeName is running..." \
+            --menu='Terminate!wineserver --kill!gtk-quit|Information!yad --button=gtk-ok --form --text "info log"!gtk-info' \
+            <&3 &
+	
+	wine start "${selection%$separator}" &> /wineprefix/run.log 
+
+        # and wait until wineserver has stopped all processes and is shut down
+	wineserver -w
+
+	for ((i=1; i<=100; i++))
+	{
+		echo $i
+		sleep 0.05
+	} | yad --progress --button=gtk-ok --image="$dolmadeIcon" --title="$dolmadeName" --center --text="Wine has terminated!" --auto-close --kill-parent
+else
+	echo "Cancelled..."
+fi
