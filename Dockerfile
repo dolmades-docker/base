@@ -9,6 +9,6 @@ RUN mkdir -p /wineprefix && chmod +rwx /wineprefix
 
 COPY targetLauncher /usr/local/bin/targetLauncher
 RUN mkdir /.dolmades
-COPY dolmades.png /.dolmades/dolmades.png
+
 ENV WINEPREFIX /wineprefix
 ENV WINEARCH win32
