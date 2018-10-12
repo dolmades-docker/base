@@ -43,7 +43,7 @@ export metadir
 export icondir
 
 # install a notification icon for the duration of the run
-yad --notification --image="$icondir/dolmades.png" --listen \
+yad --notification --image="$icondir/dolmade.png" --listen \
     --text "Dolmade Target Selector has been started" \
     --no-middle \
     --command="bash -c on_click" \
@@ -55,7 +55,7 @@ function on_exit() {
 }
 trap on_exit EXIT
 
-selection=$(yad --sticky --on-top --title="$dolmadeName" --image="$dolmadeIcon" --button="OK!$icondir/ok.svg":0 --button="Cancel!$icondir/cancel.svg":1 --form --separator="$separator" --item-separator="$separator" --field="Select Target":CB "${lnkTargets%$separator}")
+selection=$(yad --sticky --on-top --title="$dolmadeName" --image="$dolmadeIcon" --button="OK|$icondir/ok.svg":0 --button="Cancel|$icondir/cancel.svg":1 --form --item-separator="$separator" --separator="$separator" --field="Select Target":CB "${lnkTargets%$separator}")
 if [ "$?" == 0 ]; then
         selection="${selection%$separator}"
 	selectionstr="$(echo $selection|sed 's/\\/\\\\/g')"
