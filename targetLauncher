@@ -75,14 +75,14 @@ if [ "$?" == 0 ]; then
 	echo "icon:$icondir/cancel.svg" >&3
 	echo "tooltip:Shutting down $dolmadeName..." >&3
 
-        j=600
-	for ((i=1; i<=100; i++))
-	{
-		j=$(($j - 5))
-		echo $i
-		echo "# Closing this window in ${j::-2} seconds"
-		sleep 0.05
-	} | yad --sticky --on-top --progress --button="OK!$icondir/ok.svg" --image="$dolmadeIcon" --title="$dolmadeName" --center --text="Wine has terminated!" --auto-close --kill-parent
-else
-	echo "Cancelled..."
+#        j=600
+#	for ((i=1; i<=100; i++))
+#	{
+#		j=$(($j - 5))
+#		echo $i
+#		echo "# Closing this window in ${j::-2} seconds"
+#		sleep 0.05
+#	} | yad --sticky --on-top --progress --button="OK!$icondir/ok.svg" --image="$dolmadeIcon" --title="$dolmadeName" --center --text="Wine has terminated!" --auto-close --kill-parent
+#else
+#	echo "Cancelled..."
 fi
