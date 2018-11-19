@@ -28,11 +28,11 @@ exec 3<> $PIPE
 
 # add handler for tray icon left click
 function on_click() {
-    yad --sticky --on-top --center --form --text="Please select a target to run for $dolmadeName!" --button="OK!$icondir/ok.svg" --auto-close --kill-parent --image="$dolmadeIcon"
+    yad --window-icon="$dolmadeIcon" --sticky --on-top --center --form --text="Please select a target to run for $dolmadeName!" --button="OK!$icondir/ok.svg" --auto-close --kill-parent --image="$dolmadeIcon"
 }
 
 function on_click2() {
-    yad --sticky --on-top --width=600 --height=400 --center --form --field="$dolmadeName is running $1:TXT" "$(cat $metadir/run.log)" --button="OK!$icondir/ok.svg" --auto-close --kill-parent --image="$dolmadeIcon"
+    yad --window-icon="$dolmadeIcon" --sticky --on-top --width=600 --height=400 --center --form --field="$dolmadeName is running $1:TXT" "$(cat $metadir/run.log)" --button="OK!$icondir/ok.svg" --auto-close --kill-parent --image="$dolmadeIcon"
 }
 
 export -f on_click
@@ -55,7 +55,7 @@ function on_exit() {
 }
 trap on_exit EXIT
 
-selection=$(yad --sticky --on-top --title="$dolmadeName" --image="$dolmadeIcon" --button="OK|$icondir/ok.svg":0 --button="Cancel|$icondir/cancel.svg":1 --form --item-separator="$separator" --separator="$separator" --field="Select Target":CB "${lnkTargets%$separator}")
+selection=$(yad --window-icon="$dolmadeIcon" --sticky --on-top --title="$dolmadeName" --image="$dolmadeIcon" --button="OK|$icondir/ok.svg":0 --button="Cancel|$icondir/cancel.svg":1 --form --item-separator="$separator" --separator="$separator" --field="Select Target":CB "${lnkTargets%$separator}")
 if [ "$?" == 0 ]; then
         selection="${selection%$separator}"
 	selectionstr="$(echo $selection|sed 's/\\/\\\\/g')"
