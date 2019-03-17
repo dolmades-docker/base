@@ -14,7 +14,7 @@ icondir="$metadir/icons"
 # else we will scan bind mounts if any are configured
 # and we consider this a security leak
 scandir='/wineprefix/dosdevices/c:/'
-dolmadeName="$(cat $metadir/dolmadename | tr -cd '[:print:]')"
+dolmadeName="$(cat $metadir/Dolmadefile | grep -A1 DOLMADE | tail -n1 | tr -cd '[:print:]')"
 separator='|'
 dolmadeIcon="$metadir/icon.png"
 lnkTargets=$(find $scandir -name '*.lnk' -exec winepath -w  {} \; | sed 's/\\/\\\\/g' | tr -s '\n' "$separator")
