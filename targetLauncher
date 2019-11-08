@@ -14,7 +14,7 @@ icondir="$metadir/icons"
 # else we will scan bind mounts if any are configured
 # and we consider this a security leak
 scandir='/wineprefix/dosdevices/c:/'
-dolmadeName="$(cat $metadir/Dolmadefile | grep -A1 DOLMADE | tail -n1 | tr -cd '[:print:]')"
+dolmadeName="$(cat $metadir/Dolmafile | grep -A1 DOLMA | tail -n1 | tr -cd '[:print:]' | sed 's/^ *//g')"
 separator='|'
 dolmadeIcon="$metadir/icon.png"
 lnkTargets=$(find $scandir -name '*.lnk' -exec winepath -w  {} \; | sed 's/\\/\\\\/g' | tr -s '\n' "$separator")
@@ -44,7 +44,7 @@ export icondir
 
 # install a notification icon for the duration of the run
 yad --notification --image="$icondir/dolmade.png" --listen \
-    --text "Dolmade Target Selector has been started" \
+    --text "Dolmades Target Selector has been started" \
     --no-middle \
     --command="bash -c on_click" \
     <&3 &
