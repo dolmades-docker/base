@@ -6,6 +6,14 @@ icondir="$metadir/icons"
 dolmaName="$(cat $metadir/Dolmafile | grep -A1 DOLMA | tail -n1 | tr -cd '[:print:]' | sed 's/^ *//g')"
 dolmaIcon="$metadir/icon.png"
 
+if [ -f $metadir/start.sh ]; then
+   echo "Start script found, using it in combination with taskbar wrapper..."
+else
+   echo "No start script found, using target launcher..."
+   /usr/local/bin/targetLauncher
+   exit
+fi
+
 # create a FIFO file, used to manage the I/O redirection from shell
 PIPE=$(mktemp -u --tmpdir ${0##*/}.XXXXXXXX)
 mkfifo $PIPE
